@@ -36,11 +36,12 @@ class Cliente extends Banco {
         System.out.println("Deposito realizado");
 
         for (int i = 0; i < 100; i++) {
-            if (movimientos[i][0] != "Nada"){
+            if (movimientos[i][0].equals("Nada")){
                 movimientos[i][0] = "Deposito";
                 movimientos[i][1] = "Fecha: " + LocalDate.now();
                 movimientos[i][2] = "Cantidad: "+cantidad;
-                movimientos[i][3] = String.valueOf(numTarjetas[numCliente]);
+                movimientos[i][3] = Long.toString(numTarjetas[numCliente]);
+                break;
             }
         }
 
@@ -63,10 +64,12 @@ class Cliente extends Banco {
         System.out.println("Retiro realizado");
 
         for (int i = 0; i < 100; i++) {
-            if (movimientos[i][0] != "Nada"){
+            if (movimientos[i][0].equals("Nada")){
                 movimientos[i][0] = "Retiro";
-                movimientos[i][1] = "Cantidad: "+cantidad;
-                movimientos[i][2] = String.valueOf(numTarjetas[numCliente]);
+                movimientos[i][1] = "Fecha: " + LocalDate.now();
+                movimientos[i][2] = "Cantidad: "+cantidad;
+                movimientos[i][3] = Long.toString(numTarjetas[numCliente]);
+                break;
             }
         }
 
@@ -160,7 +163,7 @@ class Cliente extends Banco {
             case 3:
                 do {
 
-                    System.out.println("Ingrese el número de tarjeta a la que quiere depositar");
+                    System.out.println("Ingrese el número de tarjeta a la que quiere transferir");
                     numTarjeta = scanner.nextLong();
 
                     for (int i = 0; i < 3; i++) {
@@ -193,6 +196,16 @@ class Cliente extends Banco {
 
                 break;
 
+        }
+
+        for (int i = 0; i < 100; i++) {
+            if (movimientos[i][0].equals("Nada")){
+                movimientos[i][0] = "Transferencia";
+                movimientos[i][1] = "Fecha: " + LocalDate.now();
+                movimientos[i][2] = "Cantidad: "+cantidad;
+                movimientos[i][3] = Long.toString(numTarjetas[numCuenta]);
+                break;
+            }
         }
 
 
@@ -252,9 +265,45 @@ class Cliente extends Banco {
 
                 }
             }
+
+            for (int i = 0; i < 100; i++) {
+                if (movimientos[i][0].equals("Nada")){
+                    movimientos[i][0] = "Inversión";
+                    movimientos[i][1] = "Fecha: " + LocalDate.now();
+                    movimientos[i][2] = "Cantidad: "+cantidad;
+                    movimientos[i][3] = Long.toString(numTarjetas[cliente]);
+                    break;
+                }
+            }
         }
 
     }
+
+    void movimientos(long numTarjeta, int cliente){
+
+        int bandera = 0;
+
+        for (int i = 0; i < 100; i++) {
+
+            if (movimientos[i][3].equals(Long.toString(numTarjeta))){
+
+                System.out.println("- - - - - - - - - - - - - - - - - ");
+                System.out.println(movimientos[i][0]);
+                System.out.println(movimientos[i][1]);
+                System.out.println(movimientos[i][2]);
+                System.out.println(movimientos[i][3]);
+                System.out.println("- - - - - - - - - - - - - - - - - ");
+                bandera = 1;
+            }
+        }
+
+        if (bandera == 0){
+            System.out.println("- - - - - - - - - - - - - - -");
+            System.out.println("No has realizado movimientos");
+            System.out.println("- - - - - - - - - - - - - - -");
+        }
+    }
+
 }
 
 public class Main {
@@ -297,6 +346,7 @@ public class Main {
 
         for (int i = 0; i < 100; i++) {
             cl.movimientos[i][0] = "Nada";
+            cl.movimientos[i][3] = "0";
         }
 
 
@@ -356,7 +406,7 @@ public class Main {
                 System.out.println("Número de cuenta: "+cl.numCuentas[cliente]);
                 System.out.println("Saldo: "+cl.saldoBancs[cliente]);
 
-                System.out.println("¿Qué deseas realizar? \n1)Depositar\n2)Retirar\n3)Transferencia\n4)Inversiones\n5)Salir");
+                System.out.println("¿Qué deseas realizar? \n1)Depositar\n2)Retirar\n3)Transferencia\n4)Inversiones\n5)Movimientos\n6)Salir");
                 opcion = sc.nextInt();
 
                 switch (opcion) {
@@ -373,11 +423,14 @@ public class Main {
                         cl.inversiones(cl.numTarjetas[cliente], cliente);
                         break;
                     case 5:
+                        cl.movimientos(cl.numTarjetas[cliente], cliente);
+                        break;
+                    case 6:
                         System.out.println("Saliendo del programa . . .");
                         break;
 
                 }
-            } while (opcion !=5);
+            } while (opcion !=6);
         } while (true);
 
 
