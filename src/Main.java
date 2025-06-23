@@ -5,9 +5,6 @@ class Banco {
 
     Scanner scanner = new Scanner(System.in);
 
-    //int numCuenta;
-    //int saldo;
-
     String[] nomCuentas = new String[3];
     long[] numTarjetas = new long[3];
     int[] numCuentas = new int[3];
@@ -16,12 +13,10 @@ class Banco {
     int[] pinBancs = new int[3];
     long[][] inversiones = new long[50][3];
     String[][] movimientos = new String[100][4];
+    String[][] creditos = new String[4][3];
 }
 
 class Cliente extends Banco {
-
-    //String cliente = "Clemente";
-    //int pin = 123;
 
     void depositar(int numCliente){
 
@@ -279,13 +274,13 @@ class Cliente extends Banco {
 
     }
 
-    void movimientos(long numTarjeta, int cliente){
+    void movimientos(long numTarjeta){
 
         int bandera = 0;
 
         for (int i = 0; i < 100; i++) {
 
-            if (movimientos[i][3].equals(Long.toString(numTarjeta))){
+            if (movimientos[3][i].equals(Long.toString(numTarjeta))){
 
                 System.out.println("- - - - - - - - - - - - - - - - - ");
                 System.out.println(movimientos[i][0]);
@@ -302,6 +297,78 @@ class Cliente extends Banco {
             System.out.println("No has realizado movimientos");
             System.out.println("- - - - - - - - - - - - - - -");
         }
+    }
+
+    void credito(long numTarjeta, int cliente){
+
+        int bandera = 0;
+        int opcion = 0;
+        int tipoCredito = 0;
+
+
+        for (int i = 0; i < 3; i++) {
+            if (creditos[0][i].equals(Long.toString(numTarjeta))){
+                System.out.println("- - - - - - - - - - -");
+                System.out.println(nomCuentas[i] + " tu crédito es de "+ creditos[1][i]+", la cantidad es: "+ creditos[2][i]+ "\nTu folio es: "+creditos[0][i]);
+                System.out.println("- - - - - - - - - - -");
+                bandera = 1;
+                break;
+            }
+        }
+
+        if (bandera == 0){
+
+            System.out.println("No tienes ningún crédito, quieres adquirir uno? \n1)Si\n2)No");
+            opcion = scanner.nextInt();
+
+            if (opcion == 1){
+                do {
+                    System.out.println("¿Qué tipo de crédito quieres adquirir?\n1)Cliente normal\n2)Estudiante\n3)Empresa");
+                    tipoCredito = scanner.nextInt();
+                } while(tipoCredito >3);
+            }
+
+            switch (tipoCredito){
+                case 1:
+                    System.out.println("Adquiriste el crédito de cliente normal, tienes un crédito de $5000 pesos");
+                    for (int i = 0; i < 3; i++) {
+                        if (creditos[0][i].equals("Nada")){
+                            creditos[0][i] = (Long.toString(numTarjetas[cliente] + cliente));
+                            creditos[1][i] = "Cliente normal";
+                            creditos[2][i] = "5000";
+                            creditos[3][i] = (Long.toString(numTarjetas[cliente]));
+                            break;
+                        }
+                    }
+                    break;
+                case 2:
+                    System.out.println("Adquiriste el crédito de estudiante, tienes un crédito de $3500 pesos");
+                    for (int i = 0; i < 3; i++) {
+                        if (creditos[0][i].equals("Nada")){
+                            creditos[0][i] = (Long.toString(numTarjetas[cliente] + cliente));
+                            creditos[1][i] = "Estudiante";
+                            creditos[2][i] = "3500";
+                            creditos[3][i] = (Long.toString(numTarjetas[cliente]));
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    System.out.println("Adquiriste el crédito de empresa, tienes un crédito de $20000 pesos");
+                    for (int i = 0; i < 3; i++) {
+                        if (creditos[0][i].equals("Nada")){
+                            creditos[0][i] = (Long.toString(numTarjetas[cliente] + cliente));
+                            creditos[1][i] = "Empresa";
+                            creditos[2][i] = "20000";
+                            creditos[3][i] = (Long.toString(numTarjetas[cliente]));
+                            break;
+                        }
+                    }
+                    break;
+            }
+
+        }
+
     }
 
 }
@@ -347,6 +414,11 @@ public class Main {
         for (int i = 0; i < 100; i++) {
             cl.movimientos[i][0] = "Nada";
             cl.movimientos[i][3] = "0";
+        }
+
+        for (int i = 0; i < 3; i++) {
+            cl.creditos[0][i] = "Nada";
+            cl.creditos[3][i] = "0";
         }
 
 
@@ -406,7 +478,7 @@ public class Main {
                 System.out.println("Número de cuenta: "+cl.numCuentas[cliente]);
                 System.out.println("Saldo: "+cl.saldoBancs[cliente]);
 
-                System.out.println("¿Qué deseas realizar? \n1)Depositar\n2)Retirar\n3)Transferencia\n4)Inversiones\n5)Movimientos\n6)Salir");
+                System.out.println("¿Qué deseas realizar? \n1)Depositar\n2)Retirar\n3)Transferencia\n4)Inversiones\n5)Movimientos\n6)Crédito\n7)Salir");
                 opcion = sc.nextInt();
 
                 switch (opcion) {
@@ -423,14 +495,17 @@ public class Main {
                         cl.inversiones(cl.numTarjetas[cliente], cliente);
                         break;
                     case 5:
-                        cl.movimientos(cl.numTarjetas[cliente], cliente);
+                        cl.movimientos(cl.numTarjetas[cliente]);
                         break;
                     case 6:
+                        cl.credito(cl.numTarjetas[cliente], cliente);
+                        break;
+                    case 7:
                         System.out.println("Saliendo del programa . . .");
                         break;
 
                 }
-            } while (opcion !=6);
+            } while (opcion !=7);
         } while (true);
 
 
