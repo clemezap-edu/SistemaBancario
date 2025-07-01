@@ -11,16 +11,14 @@ class Banco {
     long [] interBancs = new long[3];
     double[] saldoBancs = new double[3];
     int[] pinBancs = new int[3];
-    long[][] inversiones = new long[50][3];
-    String[][] movimientos = new String[100][4];
+    long[][] inversiones = new long[4][50];
+    String[][] movimientos = new String[4][100];
     String[][] creditos = new String[4][3];
 }
 
 class Cliente extends Banco {
 
     void depositar(int numCliente){
-
-
 
         int cantidad;
 
@@ -31,11 +29,11 @@ class Cliente extends Banco {
         System.out.println("Deposito realizado");
 
         for (int i = 0; i < 100; i++) {
-            if (movimientos[i][0].equals("Nada")){
-                movimientos[i][0] = "Deposito";
-                movimientos[i][1] = "Fecha: " + LocalDate.now();
-                movimientos[i][2] = "Cantidad: "+cantidad;
-                movimientos[i][3] = Long.toString(numTarjetas[numCliente]);
+            if (movimientos[0][i].equals("Nada")){
+                movimientos[0][i] = "Deposito";
+                movimientos[1][i] = "Fecha: " + LocalDate.now();
+                movimientos[2][i] = "Cantidad: "+cantidad;
+                movimientos[3][i] = Long.toString(numTarjetas[numCliente]);
                 break;
             }
         }
@@ -44,7 +42,6 @@ class Cliente extends Banco {
 
     void retirar(int numCliente) {
         int cantidad;
-
 
         do {
             System.out.println("¿Qué cantidad quieres retirar?");
@@ -59,11 +56,11 @@ class Cliente extends Banco {
         System.out.println("Retiro realizado");
 
         for (int i = 0; i < 100; i++) {
-            if (movimientos[i][0].equals("Nada")){
-                movimientos[i][0] = "Retiro";
-                movimientos[i][1] = "Fecha: " + LocalDate.now();
-                movimientos[i][2] = "Cantidad: "+cantidad;
-                movimientos[i][3] = Long.toString(numTarjetas[numCliente]);
+            if (movimientos[0][i].equals("Nada")){
+                movimientos[0][i] = "Retiro";
+                movimientos[1][i] = "Fecha: " + LocalDate.now();
+                movimientos[2][i] = "Cantidad: "+cantidad;
+                movimientos[3][i] = Long.toString(numTarjetas[numCliente]);
                 break;
             }
         }
@@ -72,14 +69,8 @@ class Cliente extends Banco {
 
     void transferencia(int numCuenta ){
 
-        long cantidad = 0;
-        long clabe = 0;
-        long numTarjeta;
-        int cuentaDestino = 0;
-        int cuentaDepo = 0;
-        int opcion = 0;
-
-        int paso = 0;
+        long cantidad = 0, clabe = 0, numTarjeta;
+        int cuentaDestino = 0, cuentaDepo = 0, opcion = 0, paso = 0;
 
         System.out.println("¿Qué tipo de transferencia quiere realizar?\n1)Mismo Banco\n2)Interbancaria\n3)Por tarjeta");
         opcion  = scanner.nextInt();
@@ -87,7 +78,6 @@ class Cliente extends Banco {
         switch (opcion){
             case 1:
                 do {
-
                     System.out.println("Ingrese el Número de cuenta:");
                     cuentaDestino = scanner.nextInt();
 
@@ -194,33 +184,43 @@ class Cliente extends Banco {
         }
 
         for (int i = 0; i < 100; i++) {
-            if (movimientos[i][0].equals("Nada")){
-                movimientos[i][0] = "Transferencia";
-                movimientos[i][1] = "Fecha: " + LocalDate.now();
-                movimientos[i][2] = "Cantidad: "+cantidad;
-                movimientos[i][3] = Long.toString(numTarjetas[numCuenta]);
+            if (movimientos[0][i].equals("Nada")){
+                movimientos[0][i] = "Transferencia";
+                movimientos[1][i] = "Fecha: " + LocalDate.now();
+                movimientos[2][i] = "Cantidad: "+cantidad;
+                movimientos[3][i] = Long.toString(numTarjetas[numCuenta]);
                 break;
             }
         }
-
-
 
     }
 
     void inversiones(long numTarjeta, int cliente){
 
-        int bandera = 0;
-        int paso = 0;
-        int opcion = 0;
-        int cantidad = 0;
-
+        int bandera = 0, paso = 0, opcion = 0, cantidad = 0, plazo = 0;
 
         for (int i = 0; i < 50; i++) {
-            if (numTarjeta == inversiones[i][2]){
+            if (numTarjeta == inversiones[2][i]){
+
                 System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - -");
-                System.out.println("Inversión "+ inversiones[i][1]);
-                System.out.println("Cantidad: "+ inversiones[i][0]);
-                System.out.println("Retorno: "+ ( inversiones[i][0] + (inversiones[i][0] *0.02) * 0.15 ) );
+                System.out.println("Inversión "+ inversiones[1][i]);
+                System.out.println("Cantidad: "+ inversiones[0][i]);
+
+                if(inversiones[3][i] == 1){
+                    System.out.println("Plazo: 3 meses");
+                    System.out.println("Retorno: "+ ((inversiones[0][i] *0.02) * 0.15 )*3);
+                }
+
+                if(inversiones[3][i] == 2){
+                    System.out.println("Plazo: 6 meses");
+                    System.out.println("Retorno: "+ ((inversiones[0][i] *0.02) * 0.15 )*6);
+                }
+
+                if(inversiones[3][i] == 3){
+                    System.out.println("Plazo: 12 meses");
+                    System.out.println("Retorno: "+ ((inversiones[0][i] *0.02) * 0.15 )*12);
+                }
+
                 System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - -");
                 bandera = 1;
             }
@@ -246,13 +246,30 @@ class Cliente extends Banco {
 
             } while (paso == 0);
 
-            for (int i = 0; i < 50; i++) {
-                if (inversiones[i][0] == 0 ){
-                    inversiones[i][0] = cantidad;
-                    inversiones[i][1] = 123 + i + cantidad;
-                    inversiones[i][2] = numTarjeta;
+            System.out.println("¿Cuál es el plazo que buscas?\n1)3 meses\n2)6 meses\n3)12 meses");
+            plazo = scanner.nextInt();
 
-                    saldoBancs[cliente] += (cantidad * 0.02) * 0.15  ;
+            for (int i = 0; i < 50; i++) {
+                if (inversiones[0][i] == 0 ){
+                    inversiones[0][i] = cantidad;
+                    inversiones[1][i] = 123 + i + cantidad;
+                    inversiones[2][i] = numTarjeta;
+                    inversiones[3][i] = plazo;
+
+                    switch(plazo){
+                        case 1:
+                            saldoBancs[cliente] += ((cantidad * 0.02) * 0.15) * 3  ;
+                            break;
+                        case 2:
+                            saldoBancs[cliente] += ((cantidad * 0.02) * 0.15) * 6  ;
+                            break;
+                        case 3:
+                            saldoBancs[cliente] += ((cantidad * 0.02) * 0.15) * 12  ;
+                            break;
+                    }
+
+
+                    //saldoBancs[cliente] += (cantidad * 0.02) * 0.15  ;
 
                     System.out.println("Inversión realizada");
 
@@ -262,11 +279,11 @@ class Cliente extends Banco {
             }
 
             for (int i = 0; i < 100; i++) {
-                if (movimientos[i][0].equals("Nada")){
-                    movimientos[i][0] = "Inversión";
-                    movimientos[i][1] = "Fecha: " + LocalDate.now();
-                    movimientos[i][2] = "Cantidad: "+cantidad;
-                    movimientos[i][3] = Long.toString(numTarjetas[cliente]);
+                if (movimientos[0][i].equals("Nada")){
+                    movimientos[0][i] = "Inversión";
+                    movimientos[1][i] = "Fecha: " + LocalDate.now();
+                    movimientos[2][i] = "Cantidad: "+cantidad;
+                    movimientos[3][i] = Long.toString(numTarjetas[cliente]);
                     break;
                 }
             }
@@ -283,10 +300,10 @@ class Cliente extends Banco {
             if (movimientos[3][i].equals(Long.toString(numTarjeta))){
 
                 System.out.println("- - - - - - - - - - - - - - - - - ");
-                System.out.println(movimientos[i][0]);
-                System.out.println(movimientos[i][1]);
-                System.out.println(movimientos[i][2]);
-                System.out.println(movimientos[i][3]);
+                System.out.println(movimientos[0][i]);
+                System.out.println(movimientos[1][i]);
+                System.out.println(movimientos[2][i]);
+                System.out.println(movimientos[3][i]);
                 System.out.println("- - - - - - - - - - - - - - - - - ");
                 bandera = 1;
             }
@@ -407,13 +424,13 @@ public class Main {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 50; j++) {
-                cl.inversiones[j][i] = 0;
+                cl.inversiones[i][j] = 0;
             }
         }
 
         for (int i = 0; i < 100; i++) {
-            cl.movimientos[i][0] = "Nada";
-            cl.movimientos[i][3] = "0";
+            cl.movimientos[0][i] = "Nada";
+            cl.movimientos[3][i] = "0";
         }
 
         for (int i = 0; i < 3; i++) {
@@ -507,9 +524,6 @@ public class Main {
                 }
             } while (opcion !=7);
         } while (true);
-
-
-
 
     }
 }
